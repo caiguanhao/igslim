@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+var (
+	ErrNoSuchUser = errors.New("no such user")
+	ErrFailed     = errors.New("failed to get user")
+)
+
 const (
 	userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"
 
@@ -83,13 +88,16 @@ func (client Client) GetUserWithContext(ctx context.Context, username string) (*
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode == 404 {
+		return nil, ErrNoSuchUser
+	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 	user := getProfileFromHtml(string(body))
 	if user == nil {
-		return nil, errors.New("failed to get user")
+		return nil, ErrFailed
 	}
 	return user.User(), nil
 }

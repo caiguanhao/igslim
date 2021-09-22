@@ -2,8 +2,10 @@ package igslim
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestGetUser(t *testing.T) {
@@ -27,5 +29,13 @@ func TestGetUser(t *testing.T) {
 	}
 	if user.FullName != "Taylor Swift" {
 		t.Error("wrong user full name")
+	}
+	name := fmt.Sprintf("notexist.%d", time.Now().Unix())
+	user, err = client.GetUser(name)
+	if err != ErrNoSuchUser {
+		t.Error("error should be ErrNoSuchUser")
+	}
+	if user != nil {
+		t.Error("user should be nil")
 	}
 }
