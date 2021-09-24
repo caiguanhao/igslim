@@ -4,6 +4,14 @@ Get Instagram user profile.
 
 Docs: <https://pkg.go.dev/github.com/caiguanhao/igslim>
 
+You may need Instagram's session ID. Steps to get session ID:
+
+1. Visit <https://www.instagram.com/> and log in.
+2. Right click web page and select "Inspect".
+3. Select "Application" tab.
+4. In "Storage", select https://www.instagram.com under "Cookies".
+5. Select "sessionid" cookie item and copy the value.
+
 ```go
 client := igslim.NewClient(os.Getenv("IGSESSIONID"))
 user, err := client.GetUser("TaylorSwift")
